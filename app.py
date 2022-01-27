@@ -42,8 +42,7 @@ while True:
 		del values['ID']
 		values = removeFileSelectFromDict(values)
 		response = supabase.table('CLICKBOARDS').insert(values).execute()
-		if response['status_code'] == 201:
-			sg.popup_ok('Clickboard wurde erstellt erfolgreich erstellt.')
+		sg.popup_ok('Clickboard wurde erstellt erfolgreich erstellt.')
 
 	if event == 'Updaten':
 		values = removeFileSelectFromDict(values)
@@ -107,21 +106,18 @@ while True:
 
 		response = supabase.table('CLICKBOARDS').insert(values, upsert=True).execute()
 		print(response)
-		if response['status_code'] == 201:
-			sg.popup_ok('Clickboard wurde erfolgreich aktualisiert.')
+		sg.popup_ok('Clickboard wurde erfolgreich aktualisiert.')
 	if event == 'Abrufen':
 		response = supabase.table('CLICKBOARDS').select('*').eq('ID', values['ID']).execute()
-		if response['status_code'] == 200:
-			if response['data']:
-				FillFormWithValues(window, response['data'][0])
-			else:
-				sg.popup_error('Clickboard nicht gefunden :/')
+		if response[0][0]:
+			FillFormWithValues(window, response[0][0])
+		else:
+			sg.popup_error('Clickboard nicht gefunden :/')
 		print(response)
 
 	if event == 'Loeschen':
 		response = supabase.table('CLICKBOARDS').delete().eq('ID', values['ID']).execute()
-		if response['status_code'] == 200:
-			sg.popup_ok('Clickboard mit der ID: ' + values['ID'] + ' wurde erfolgreich gelöscht')
+		sg.popup_ok('Clickboard mit der ID: ' + values['ID'] + ' wurde erfolgreich gelöscht')
 
 	print('You entered ', values)
 
